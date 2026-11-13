@@ -41,6 +41,8 @@ const names = expressions ? expressions.map((_, i) => `probe${i}`) : request.bin
       const m = await ctx.getMeasure(name);
       if (m.value) values.push(m.value);
       else if (m.samples) values.push({ shape: [], data: [m.samples[0]] });
+      else if (m.shape === 'tuple' && m.elems.length === 1 && m.elems[0].value)
+        values.push(m.elems[0].value);
       else throw new Error(`${name} did not produce a numeric value`);
     }
   }

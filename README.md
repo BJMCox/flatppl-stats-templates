@@ -18,7 +18,7 @@ See the [linked mathematical reference](docs/reference.md) for signatures, axes,
 With existing NumPy/SciPy and FlatPPL engines, run:
 
 ```sh
-FLATPPL_JS_DIR=/path/to/flatppl-js python tests/check_math.py --probe-gaps
+FLATPPL_JS_DIR=/path/to/flatppl-js python tests/check_math.py
 FLATPPL_JS_DIR=/path/to/flatppl-js python examples/fit.py
 flatppl stablehlo examples/histogram-fit.flatppl --dtype f64 -o /tmp/histogram-fit.mlir
 flatppl stablehlo tests/runtime.flatppl --dtype f64 -o /tmp/template-runtime.mlir
@@ -26,4 +26,4 @@ flatppl stablehlo tests/runtime.flatppl --dtype f64 -o /tmp/template-runtime.mli
 
 The tests use the real JS module loader and worker, with independent NumPy/SciPy values. `tests/runtime.flatppl` and the matching `runtime_oracle`/`RUNTIME_POINTS` in `tests/check_math.py` support compiled value and derivative checks. Interpolation derivatives are meaningful inside cells; they are generally undefined at interior grid knots.
 
-Current engine limitation: `fixed_total_templates` preserves the full multinomial joint law in source, but the included [capability probe](tests/fixed-total.flatppl) is refused by the current engines. See [details](docs/reference.md#engine-support). It is not replaced by a Poisson approximation or numeric score.
+The mathematical suite includes the [fixed-total fixture](tests/fixed-total.flatppl), which checks the normalized multinomial MC and Poisson data joint law against an independent SciPy oracle.

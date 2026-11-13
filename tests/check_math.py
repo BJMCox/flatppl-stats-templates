@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 import subprocess
 from pathlib import Path
@@ -218,32 +217,17 @@ score = logdensityof(law,record(data_a=[1,7],data_b=[2,4],mc=rowstack([[0,1],[4,
     )
 
 
-def probe_gaps():
+def check_fixed_total():
     source = (ROOT / "tests/fixed-total.flatppl").read_text()
     expected = stats.poisson.logpmf(
         [2, 5], np.array([[0.2, 0.6], [0.8, 0.4]]) @ [2.0, 4.0] + 1.0
     ).sum()
     expected += stats.multinomial.logpmf([2, 8], 10, [0.2, 0.8])
     expected += stats.multinomial.logpmf([3, 2], 5, [0.6, 0.4])
-    try:
-        close(evaluate({"source": source, "bindings": ["outputs"]})[0], expected)
-        print(json.dumps({"fixed_total": "passed", "oracle": expected}))
-    except subprocess.CalledProcessError as error:
-        print(
-            json.dumps(
-                {
-                    "fixed_total": "engine limitation",
-                    "oracle": expected,
-                    "error": error.stderr.strip(),
-                }
-            )
-        )
+    close(evaluate({"source": source, "bindings": ["outputs"]})[0], expected)
+    print(json.dumps({"fixed_total": "passed", "oracle": expected}))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--probe-gaps", action="store_true")
-    args = parser.parse_args()
     run()
-    if args.probe_gaps:
-        probe_gaps()
+    check_fixed_total()
