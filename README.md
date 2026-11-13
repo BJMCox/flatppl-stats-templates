@@ -4,7 +4,7 @@ Statistical template combinations, response projection, observation laws, finite
 
 Templates have **bins as rows and components as columns** (`[N,K]`). Responses have `[measured,true]` axes. Every fitted parameter is explicit; the library adds no prior, floor, profiling, response normalization, or extrapolation.
 
-Run the [posterior example](https://live.flatppl.org/#model=https%3A%2F%2Fraw.githubusercontent.com%2FBJMCox%2Fflatppl-stats-templates%2Fmain%2Fexamples%2Fplayground.flatppl&target=Pi_post) in the live playground. It loads its library modules from GitHub.
+Run the [posterior example](https://live.flatppl.org/#model=https%3A%2F%2Fraw.githubusercontent.com%2Fflatppl-community%2Fflatppl-stats-templates%2Fmain%2Fexamples%2Fplayground.flatppl&target=Pi_post) in the live playground. It loads its library modules from GitHub.
 
 ```flatppl
 flatppl_compat = "0.1"

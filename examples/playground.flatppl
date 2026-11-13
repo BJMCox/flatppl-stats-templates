@@ -5,7 +5,7 @@ Infer two nonnegative component yields from three observed count bins.
 Template columns sum to one. Background contributes one count per bin.
 %%%
 flatppl_compat = "0.1"
-templates = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-stats-templates/314b0ced8ccd5ce320888cd643c3188c2510ba56/main.flatppl")
+templates = load_module("https://raw.githubusercontent.com/flatppl-community/flatppl-stats-templates/314b0ced8ccd5ce320888cd643c3188c2510ba56/main.flatppl")
 shapes = rowstack([[0.6, 0.1], [0.3, 0.3], [0.1, 0.6]])
 first_yield ~ Gamma(2, 0.1)
 second_yield ~ Gamma(2, 0.1)
