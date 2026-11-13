@@ -1,0 +1,18 @@
+%%%
+# Scalar interpolation on fixed grids
+
+Nodes are finite, strictly increasing vectors with at least two entries.
+Values are interpolated linearly, never in log space. The mathematical domain
+is the closed grid hull. Outside it the result is NaN. Knot derivatives are
+undefined in general; differentiate only inside cells. Ramp weights avoid
+differentiating an integer cell search.
+%%%
+flatppl_compat = "0.1"
+_ramps = (nodes, x) -> min.(1.0, max.(0.0, (x .- crosscorr(nodes, [1.0, 0.0])) ./ crosscorr(nodes, [-1.0, 1.0])))
+_weights_from_ramps = ramps -> cat([1.0], zeros(lengthof(ramps))) .+ cat(-1.0 * ramps, [0.0]) .+ cat([0.0], ramps)
+_weights = (nodes, x) -> _weights_from_ramps(_ramps(nodes, x))
+_in_hull = (nodes, x) -> x >= nodes[1] && x <= nodes[lengthof(nodes)]
+% Scalar interpolation of aligned node and value vectors on the closed hull.
+linear_interpolate = (nodes, values, x) -> ifelse(_in_hull(nodes, x), transpose(_weights(nodes, x)) * values, inf - inf)
+% Values have [x-node, y-node] axes; the rectangular hull includes all edges.
+bilinear_interpolate = (x_nodes, y_nodes, values, x, y) -> ifelse(_in_hull(x_nodes, x) && _in_hull(y_nodes, y), transpose(_weights(x_nodes, x)) * values * _weights(y_nodes, y), inf - inf)

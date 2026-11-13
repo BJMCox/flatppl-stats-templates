@@ -1,0 +1,19 @@
+%%%
+# Synthetic laboratory histogram fit
+
+Two supplied integrated-bin component shapes describe a three-bin assay.
+Inputs are independent nonnegative strengths, not fractions. Outputs are the
+Poisson log likelihood followed by the three expected measured bin counts.
+No prior is imposed; a host optimizer can maximize outputs[1].
+%%%
+flatppl_compat = "0.1"
+a = load_module("../main.flatppl")
+strengths = elementof(cartpow(nonnegreals, 2))
+templates = rowstack([[0.6, 0.1], [0.3, 0.3], [0.1, 0.6]])
+background = [1.0, 1.0, 1.0]
+counts_data = [17, 14, 12]
+expected = a.combine(templates, strengths) .+ background
+sampling_law = a.poisson_model(templates, strengths, background)
+log_likelihood = logdensityof(sampling_law, counts_data)
+inputs = strengths
+outputs = [log_likelihood, expected[1], expected[2], expected[3]]

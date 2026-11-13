@@ -1,0 +1,60 @@
+%%%
+# Compiled value and derivative checks
+
+Explicit real-vector input x = [strength_1, strength_2, log_shift, grid_x,
+grid_y]. Interpolation derivatives are checked inside cells only. Outputs
+cover weighted normalization, lossy projection, deformation, and normalized
+observation/auxiliary laws. This file has no prior.
+%%%
+flatppl_compat = "0.1"
+a = load_module("../main.flatppl")
+x = elementof(cartpow(reals, 5))
+templates = rowstack([[0.3, 0.1], [0.1, 0.6], [0.2, 0.2]])
+quadrature = [1.0, 2.0, 0.5]
+response = rowstack([[0.7, 0.1, 0.0], [0.1, 0.5, 0.6]])
+weights = [x[1], x[2]]
+background = [0.5, 0.7, 0.2]
+covariance = exp(x[3]) * rowstack([[1.2, 0.1, 0.0], [0.1, 1.8, 0.2], [0.0, 0.2, 0.9]])
+coefficient_covariance = rowstack([[0.2, -0.04], [-0.04, 0.3]])
+normalized = a.normalize_columns(deformed, quadrature)
+folded = a.fold_templates(response, templates, quadrature)
+prediction = a.combine(templates, weights)
+projected = a.project(response, prediction, quadrature)
+deformed = a.log_deform(templates, rowstack([[x[3], 0.0], [0.0, -x[3]], [x[3], x[3]]]))
+poisson_score = logdensityof(a.poisson_model(templates, weights, background), [3, 4, 0])
+gaussian_score = logdensityof(
+  a.gaussian_model(templates, weights, background, covariance),
+  [2.1, 3.2, 0.5],
+)
+marginal_score = logdensityof(
+  a.gaussian_marginal(templates, weights, coefficient_covariance, background, covariance),
+  [2.1, 3.2, 0.5],
+)
+mc_expectations = rowstack([[0.0, 2.0], [3.0, 4.0], [1.0, 0.0]])
+mc_data = rowstack([[0, 1], [4, 2], [1, 0]])
+bb_score = logdensityof(
+  a.barlow_beeston(mc_expectations, weights, background),
+  record(data = [3, 4, 0], mc = mc_data),
+)
+linear_value = a.linear_interpolate([0.0, 1.0, 3.0], [1.0, 3.0, 2.0], x[4])
+bilinear_value = a.bilinear_interpolate(
+  [0.0, 1.0, 3.0],
+  [-1.0, 2.0],
+  rowstack([[0.0, 2.0], [3.0, 6.0], [4.0, 10.0]]),
+  x[4],
+  x[5],
+)
+outputs = [
+  prediction[1],
+  normalized[2, 1],
+  folded[1, 2],
+  projected[2],
+  deformed[1, 1],
+  poisson_score,
+  gaussian_score,
+  marginal_score,
+  bb_score,
+  linear_value,
+  bilinear_value,
+]
+inputs = x

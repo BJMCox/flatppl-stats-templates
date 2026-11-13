@@ -1,0 +1,12 @@
+%%%
+# Fixed-total multinomial template law
+
+This normalized joint-law query also serves as an engine capability probe.
+The MC observation is a [bins, components] matrix, never independent Poisson
+bins and never an effective-count approximation.
+%%%
+flatppl_compat = "0.1"
+a = load_module("../main.flatppl")
+probabilities = rowstack([[0.2, 0.6], [0.8, 0.4]])
+law = a.fixed_total_templates(probabilities, [10, 5], [2.0, 4.0], [1.0, 1.0])
+outputs = [logdensityof(law, record(data = [2, 5], mc = rowstack([[2, 3], [8, 2]])))]
