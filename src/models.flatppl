@@ -1,0 +1,20 @@
+%%%
+# Template sampling laws
+
+Measure composition is needed here because a library constructor returns a
+law without introducing hidden stochastic nodes or priors. All counts use
+counting measure; Gaussian laws use Lebesgue measure.
+%%%
+flatppl_compat = "0.1"
+% Independent Poisson bins, including structural zeros.
+poisson_model = (templates, weights, background) -> Poisson.(templates * weights .+ background)
+% Correlated Gaussian observations with positive-definite covariance.
+gaussian_model = (templates, weights, offset, covariance) -> MvNormal(templates * weights .+ offset, covariance)
+% Integrate unrestricted Gaussian coefficients, retaining covariance normalization.
+gaussian_marginal = (templates, mean_weights, covariance_weights, offset, covariance) -> MvNormal(templates * mean_weights .+ offset, covariance + templates * covariance_weights * transpose(templates))
+% Full independent unweighted Poisson simulation law; MC enters exactly once.
+barlow_beeston = (expected_mc, scales, background) -> joint(data = Poisson.(expected_mc * scales .+ background), mc = Poisson.(expected_mc))
+_columns = matrix -> get.(fill(matrix, sizeof(matrix)[2]), all, indicesof(matrix)[2])
+_column_matrix = bijection(columns -> colstack(columns), _columns, columns -> 0.0)
+% Independent fixed-total MC columns; strengths are integrated data yields.
+fixed_total_templates = (probabilities, mc_totals, strengths, background) -> joint(data = Poisson.(probabilities * strengths .+ background), mc = pushfwd(_column_matrix, ((n, p) -> Multinomial(n, p)).(mc_totals, _columns(probabilities))))

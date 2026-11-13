@@ -1,0 +1,22 @@
+%%%
+# Statistical template models
+
+Templates have bins as rows and components as columns. All fitted parameters
+are explicit arguments; constructors return normalized sampling laws.
+%%%
+flatppl_compat = "0.1"
+linear = load_module("src/linear.flatppl")
+models = load_module("src/models.flatppl")
+grids = load_module("src/grids.flatppl")
+combine = linear.combine
+normalize_columns = linear.normalize_columns
+project = linear.project
+fold_templates = linear.fold_templates
+log_deform = linear.log_deform
+poisson_model = models.poisson_model
+gaussian_model = models.gaussian_model
+gaussian_marginal = models.gaussian_marginal
+barlow_beeston = models.barlow_beeston
+fixed_total_templates = models.fixed_total_templates
+linear_interpolate = grids.linear_interpolate
+bilinear_interpolate = grids.bilinear_interpolate

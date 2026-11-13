@@ -1,0 +1,17 @@
+%%%
+# Linear template operations
+
+Templates are [bins, components]; responses are [measured, true]. Quadrature
+weights are positive and applied once to density-valued true-grid inputs.
+%%%
+flatppl_compat = "0.1"
+% Linear prediction; weights need not sum to one.
+combine = (templates, weights) -> templates * weights
+% Divide each column by its positive weighted integral, retaining zero bins.
+normalize_columns = (templates, quadrature_weights) -> templates ./ addaxes(transpose(templates) * quadrature_weights, 1, 0)
+% Preserve response losses; no response-column normalization is applied.
+project = (response, values, quadrature_weights) -> response * (values .* quadrature_weights)
+% Precompute this only while the response and templates remain fixed.
+fold_templates = (response, templates, quadrature_weights) -> response * (templates .* addaxes(quadrature_weights, 0, 1))
+% Rate-and-shape deformation. Shape-only models must normalize explicitly.
+log_deform = (templates, log_shift) -> templates .* exp.(log_shift)
