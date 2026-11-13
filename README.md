@@ -1,5 +1,7 @@
 # flatppl-stats-templates
 
+[Function reference](docs/reference.md)
+
 Statistical template combinations, response projection, observation laws, finite simulation statistics, and scalar grid interpolation for FlatPPL 0.1. Library version: **0.1**.
 
 Templates have **bins as rows and components as columns** (`[N,K]`). Responses have `[measured,true]` axes. Every fitted parameter is explicit; the library adds no prior, floor, profiling, response normalization, or extrapolation.

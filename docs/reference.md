@@ -1,6 +1,8 @@
-# Statistical template reference — 0.1
+# Statistical templates reference
 
-Load `main.flatppl` and access the functions below. The source uses FlatPPL language compatibility `0.1`. This document is standalone Markdown; its display equations use GitHub math fences.
+Library version **0.1** · [Package overview](../README.md)
+
+Load `main.flatppl` and access the functions below. The source uses FlatPPL language compatibility `0.1`.
 
 | Function | Meaning |
 |---|---|
